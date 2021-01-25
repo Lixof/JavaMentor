@@ -17,8 +17,8 @@ public class Main {
         usi.saveUser(second.getName(), second.getLastName(), second.getAge());
         usi.saveUser(third.getName(), third.getLastName(), third.getAge());
         usi.saveUser(fourth.getName(), fourth.getLastName(), fourth.getAge());
-        List<User> users = usi.getAllUsers();
-        for (User user : users) System.out.println(user.toString());
+       // List<User> users = usi.getAllUsers();
+       // for (User user : users) System.out.println(user.toString());
         usi.cleanUsersTable();
         usi.dropUsersTable();
     }

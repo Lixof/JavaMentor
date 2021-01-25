@@ -10,28 +10,55 @@ public class Util {
     private final static String password = ("root");
     private static Connection connection;
     private static Statement statement;
-    public static Statement statement() {
+    public static boolean jdbc(String sql) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection(url, username, password);
             statement = connection.createStatement();
+            statement.executeUpdate(sql);
+            return true;
         } catch (SQLException e) {
             e.getStackTrace();
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException i) {
+                i.getStackTrace();
+                return false;
+            }
+            return false;
         } catch (ClassNotFoundException e) {
             e.getStackTrace();
-        }
-        return statement;
-    }
-    public static void close() {
-        try {
-            if (statement != null) {
-                statement.close();
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException i) {
+                i.getStackTrace();
+                return false;
             }
-            if (connection != null) {
-                connection.close();
+            return false;
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.getStackTrace();
+                return false;
             }
-        } catch (SQLException e) {
-            e.getStackTrace();
+            return false;
         }
+
     }
 }
