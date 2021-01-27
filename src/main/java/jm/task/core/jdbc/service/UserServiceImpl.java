@@ -3,8 +3,11 @@ package jm.task.core.jdbc.service;
 import jm.task.core.jdbc.util.Util;
 import jm.task.core.jdbc.model.User;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import java.sql.ResultSet;
 
 public class UserServiceImpl implements UserService {
 
@@ -36,9 +39,21 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<User> getAllUsers() {
+        User user;
         List<User> users = new ArrayList<>();
         String sql = "select * from REGISTRATION ";
-        Util
+        ResultSet resultSet = Util.executeQuery(sql);
+        try {
+            while (resultSet.next()) {
+                user = new User(resultSet.getString(2), resultSet.getString(3), resultSet.getByte(4)) ;
+                user.setId(resultSet.getLong(1));
+                users.add(user);
+            }
+            return users;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     public void cleanUsersTable() {

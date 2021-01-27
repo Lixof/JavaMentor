@@ -2,19 +2,13 @@ package jm.task.core.jdbc.util;
 
 import com.mysql.fabric.jdbc.FabricMySQLDriver;
 
-import java.sql.Driver;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-
+import java.sql.*;
 
 public class Util {
 
     private final static String URL = ("jdbc:mysql://localhost:3306/mydbtest?autoReconnect=true&useSSL=false");
     private final static String USERNAME = ("root");
     private final static String PASSWORD = ("root");
-    private Connection connection;
 
     public static boolean execute(String sql) {
         try {
@@ -50,20 +44,21 @@ public class Util {
         return true;
     }
 
-    public static boolean executeQuery(String sql) {
+    public static ResultSet executeQuery(String sql) {
         try {
             Driver driver = new FabricMySQLDriver();
             DriverManager.registerDriver(driver);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return false;
+            return null;
         }
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD); Statement statement = connection.createStatement()) {
-            statement.executeQuery(sql);
+        try {
+            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            Statement statement = connection.createStatement();
+            return statement.executeQuery(sql);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return false;
+            return null;
         }
-        return true;
     }
 }
