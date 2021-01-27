@@ -1,64 +1,35 @@
 package jm.task.core.jdbc.service;
 
-import jm.task.core.jdbc.util.Util;
+import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.model.User;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
-import java.sql.ResultSet;
-
 public class UserServiceImpl implements UserService {
+    UserDaoJDBCImpl jdbc = new UserDaoJDBCImpl();
 
     public void createUsersTable() {
-        String sql = "CREATE TABLE REGISTRATION " +
-                "(id INTEGER AUTO_INCREMENT, " +
-                " name TINYTEXT, " +
-                " last_name TINYTEXT, " +
-                " age TINYINT, " +
-                " PRIMARY KEY ( id ))";
-        Util.execute(sql);
+        jdbc.createUsersTable();
     }
 
     public void dropUsersTable() {
-        String sql = "DROP TABLE REGISTRATION ";
-        Util.execute(sql);
+        jdbc.dropUsersTable();
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        String sql = "INSERT REGISTRATION(name, last_name, age) " +
-                "VALUES ('" + name + "', '" + lastName + "', " + age + ") ";
-        if (Util.execute(sql)) System.out.println("User с именем - " + name + " добавлен в бвзу данных");
+        jdbc.saveUser(name, lastName, age);
     }
 
     public void removeUserById(long id) {
-        String sql = "DELETE FROM REGISTRATION " +
-                    "WHERE id =" + id + " " ;
-        Util.executeUpdate(sql);
+        jdbc.removeUserById(id);
     }
 
     public List<User> getAllUsers() {
-        User user;
-        List<User> users = new ArrayList<>();
-        String sql = "select * from REGISTRATION ";
-        ResultSet resultSet = Util.executeQuery(sql);
-        try {
-            while (resultSet.next()) {
-                user = new User(resultSet.getString(2), resultSet.getString(3), resultSet.getByte(4)) ;
-                user.setId(resultSet.getLong(1));
-                users.add(user);
-            }
-            return users;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+        return jdbc.getAllUsers();
     }
 
     public void cleanUsersTable() {
-        String sql = "TRUNCATE TABLE  REGISTRATION ";
-        Util.execute(sql);
+        jdbc.cleanUsersTable();
     }
 }
 
