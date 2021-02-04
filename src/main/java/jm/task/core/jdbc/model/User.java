@@ -1,22 +1,23 @@
 package jm.task.core.jdbc.model;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-@Table
+@Entity
+@Table(name="registration")
 public class User {
     @Id
-    private Long id;
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long id;
 
-    @Column
-    private String name;
+    @Column(name = "name", length = 100)
+    public String name;
 
-    @Column
-    private String lastName;
+    @Column(name = "lastName", length = 100)
+    public String lastName;
 
-    @Column
-    private Byte age;
+    @Column(name = "age")
+    public Byte age;
 
     public User() {
 
